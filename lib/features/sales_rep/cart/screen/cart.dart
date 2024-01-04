@@ -389,13 +389,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                   List<FocusNode> focus = List.generate(
                                       itemList.length, (index) => FocusNode(),
                                       growable: true);
-                                  // @override
-                                  // void dispose() {
-                                  //   product.forEach((element) {
-                                  //     element.dispose();
-                                  //   });
-                                  //   super.dispose();
-                                  // }
+                               
 
                                   return Dialog(
                                     insetPadding:
