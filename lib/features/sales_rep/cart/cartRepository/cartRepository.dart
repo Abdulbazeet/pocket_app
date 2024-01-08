@@ -24,7 +24,7 @@ class CartRepository {
     required String customerPhoneNo,
     required String hasDeliveryCharge,
     required String deliveryCharge,
-    required List productIds,
+    // required List productIds,
     required String bankTransf,
     required String officePhoneNo,
     required int price,
@@ -51,11 +51,11 @@ class CartRepository {
       String? token = await getToken();
       String? name = await getName();
 
-      for (int i = 0; i < itemList.length; i++) {
-        itemList[i].productId = '';
-        itemList[i].productId = productIdStrings[i];
-        newItemList.add(itemList[i]);
-      }
+      // for (int i = 0; i < itemList.length; i++) {
+      //   itemList[i].productId = [];
+      //   itemList[i].productId = productIdStrings[i];
+      //   newItemList.add(itemList[i]);
+      // }
       var headers = {
         'Authorization': 'Token $token',
         'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ class CartRepository {
       request.body = json.encode({
         "customerLocation": customerLocation,
         "customerPhoneNo": customerPhoneNo,
-        "officePhoneNo": officePhoneNo,
+        "officePhoneNo": 2348162487349,
         "hasDeliveryCharge": hasDeliveryCharge,
         "deliveryCharge": deliveryCharge,
         "bankTransf": bankTransf,
@@ -79,7 +79,7 @@ class CartRepository {
         "paymentRefAmt": 0.toString(),
         "paymentRef": 'debt',
         "amount": price,
-        "product_group": [newItemList]
+        "product_group": [itemList]
       });
       request.headers.addAll(headers);
 
@@ -87,7 +87,8 @@ class CartRepository {
       final responseData = await response.stream.toBytes();
       final responseString = String.fromCharCodes(responseData);
       final jsonMap = jsonDecode(responseString);
-      // print(jsonMap);
+      print(jsonMap);
+
 
       if (response.statusCode == 200) {
         print('Order placed');
@@ -105,7 +106,9 @@ class CartRepository {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ReceiptPage(salesRep: name!,),
+                builder: (context) => ReceiptPage(
+                  salesRep: name!,
+                ),
               ));
           itemList = [];
           // itemList = [];
@@ -122,6 +125,7 @@ class CartRepository {
         final responseString = String.fromCharCodes(responseData);
         final jsonMap = jsonDecode(responseString);
         showSnackBar(context, 'Error placing order');
+        print(jsonMap);
         print(response.statusCode);
 
         Navigator.pop(context);
@@ -131,7 +135,7 @@ class CartRepository {
     } catch (e) {
       print(e.toString());
       print('naope');
-      // Navigator.pop(context);
+      Navigator.pop(context);
     }
   }
 }

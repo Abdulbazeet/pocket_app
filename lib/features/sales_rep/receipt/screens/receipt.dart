@@ -11,7 +11,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
 import 'package:shopping_app/screens/sales_rep_main-page.dart';
 import 'package:sizer/sizer.dart';
-
+import 'package:currency_formatter/currency_formatter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../common/utils.dart';
 
 class ReceiptPage extends StatefulWidget {
@@ -52,6 +53,9 @@ class _ReceiptPageState extends State<ReceiptPage> {
     final netImage = await networkImage(receipt[0]['store'][0]['img_url']);
     final image = await rootBundle.load('assets/photo_2023-11-21_08-41-39.jpg');
     final imageBytes = image.buffer.asUint8List();
+    final font = await PdfGoogleFonts.notoSansBold();
+    final format =
+        NumberFormat.simpleCurrency(locale: Platform.localeName, name: 'NGN');
     pw.Image image1 = pw.Image(pw.MemoryImage(imageBytes));
     final pdf = pw.Document();
 
@@ -138,8 +142,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                   style: pw.TextStyle(
                                     fontSize: 10.sp,
                                   )),
-                              pw.Text(
-                                  'M  ${receipt[0]['store'][0]['secPhoneNo']}',
+                              pw.Text('${receipt[0]['store'][0]['secPhoneNo']}',
                                   style: pw.TextStyle(
                                     fontSize: 10.sp,
                                   )),
@@ -248,12 +251,32 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                 ),
                                 // pw.Spacer(),
                                 pw.SizedBox(width: 27.sp),
-                                pw.Text(
-                                  '₦ ${formatNumberWithCommas((receipt[0]['invoice'][0]['balanceDue'] - receipt[0]['paymentRefAmt']).toString())}',
-                                  style: pw.TextStyle(
-                                    fontSize: 10.sp,
+
+                                pw.RichText(
+                                  text: pw.TextSpan(
+                                    children: [
+                                      pw.TextSpan(
+                                        text: '₦',
+                                        style: pw.TextStyle(
+                                            font: font, fontSize: 10.sp),
+                                      ),
+                                      pw.TextSpan(
+                                          text:
+                                              '${formatNumberWithCommas((receipt[0]['invoice'][0]['balanceDue']).toString())}',
+                                          style: pw.TextStyle(fontSize: 10.sp))
+                                    ],
                                   ),
                                 ),
+                                // pw.Text(r'₦10,000',
+                                //     style: pw.TextStyle(
+                                //         font: font, fontSize: 30.sp)),
+                                // pw.Text(
+                                //   format.format(
+                                //       receipt[0]['invoice'][0]['balanceDue']),
+                                //   style: pw.TextStyle(
+                                //     fontSize: 10.sp,
+                                //   ),
+                                // ),
                               ],
                             ),
                           ],
@@ -368,14 +391,31 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                       ),
                                     ),
                                     pw.SizedBox(
-                                        width: 50.sp,
-                                        child: pw.Text(
-                                          "₦${receipt[0]['deliveryCharge']}",
-                                          style: pw.TextStyle(
-                                            fontWeight: pw.FontWeight.bold,
-                                            color: PdfColor.fromHex('#000000'),
-                                          ),
-                                        ))
+                                      width: 50.sp,
+                                      child: pw.RichText(
+                                        text: pw.TextSpan(
+                                          children: [
+                                            pw.TextSpan(
+                                              text: '₦',
+                                              style: pw.TextStyle(
+                                                  font: font, fontSize: 10.sp),
+                                            ),
+                                            pw.TextSpan(
+                                                text:
+                                                    "${receipt[0]['deliveryCharge']}",
+                                                style: pw.TextStyle(
+                                                    fontSize: 10.sp))
+                                          ],
+                                        ),
+                                      ),
+                                      //  pw.Text(
+                                      //   "₦${receipt[0]['deliveryCharge']}",
+                                      //   style: pw.TextStyle(
+                                      //     fontWeight: pw.FontWeight.bold,
+                                      //     color: PdfColor.fromHex('#000000'),
+                                      //   ),
+                                      // ),
+                                    ),
                                   ],
                                 )
                               ],
@@ -434,14 +474,31 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                           ),
                                           pw.SizedBox(
                                             width: 50.sp,
-                                            child: pw.Text(
-                                              "₦${receipt[0]['order'][index]['productPrice'].toString()}",
-                                              style: pw.TextStyle(
-                                                fontWeight: pw.FontWeight.bold,
-                                                color:
-                                                    PdfColor.fromHex('#000000'),
+                                            child: pw.RichText(
+                                              text: pw.TextSpan(
+                                                children: [
+                                                  pw.TextSpan(
+                                                    text: '₦',
+                                                    style: pw.TextStyle(
+                                                        font: font,
+                                                        fontSize: 10.sp),
+                                                  ),
+                                                  pw.TextSpan(
+                                                      text:
+                                                          "${receipt[0]['order'][index]['productPrice'].toString()}",
+                                                      style: pw.TextStyle(
+                                                          fontSize: 10.sp))
+                                                ],
                                               ),
                                             ),
+                                            // pw.Text(
+                                            //   "₦${receipt[0]['order'][index]['productPrice'].toString()}",
+                                            //   style: pw.TextStyle(
+                                            //     fontWeight: pw.FontWeight.bold,
+                                            //     color:
+                                            //         PdfColor.fromHex('#000000'),
+                                            //   ),
+                                            // ),
                                           )
                                         ],
                                       )
@@ -512,11 +569,28 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                                 fontWeight: pw.FontWeight.bold,
                                               ),
                                             ),
-                                            pw.Text(
-                                                '₦ ${formatNumberWithCommas((receipt[0]['invoice'][0]['balanceDue'] - receipt[0]['deliveryCharge']).toString())}',
-                                                style: pw.TextStyle(
-                                                  fontSize: 8.sp,
-                                                )),
+                                            pw.RichText(
+                                              text: pw.TextSpan(
+                                                children: [
+                                                  pw.TextSpan(
+                                                    text: '₦',
+                                                    style: pw.TextStyle(
+                                                        font: font,
+                                                        fontSize: 10.sp),
+                                                  ),
+                                                  pw.TextSpan(
+                                                      text:
+                                                          '${formatNumberWithCommas((receipt[0]['invoice'][0]['balanceDue'] - receipt[0]['deliveryCharge']).toString())}',
+                                                      style: pw.TextStyle(
+                                                          fontSize: 10.sp))
+                                                ],
+                                              ),
+                                            ),
+                                            // pw.Text(
+                                            //     '₦ ${formatNumberWithCommas((receipt[0]['invoice'][0]['balanceDue'] - receipt[0]['deliveryCharge']).toString())}',
+                                            //     style: pw.TextStyle(
+                                            //       fontSize: 8.sp,
+                                            //     )),
                                           ],
                                         ),
                                         pw.Divider(),
@@ -531,11 +605,28 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                                 fontWeight: pw.FontWeight.bold,
                                               ),
                                             ),
-                                            pw.Text(
-                                                '₦ ${formatNumberWithCommas(receipt[0]['invoice'][0]['balanceDue'].toString())}',
-                                                style: pw.TextStyle(
-                                                  fontSize: 8.sp,
-                                                )),
+                                            pw.RichText(
+                                              text: pw.TextSpan(
+                                                children: [
+                                                  pw.TextSpan(
+                                                    text: '₦',
+                                                    style: pw.TextStyle(
+                                                        font: font,
+                                                        fontSize: 10.sp),
+                                                  ),
+                                                  pw.TextSpan(
+                                                      text:
+                                                          '${formatNumberWithCommas(receipt[0]['invoice'][0]['balanceDue'].toString())}',
+                                                      style: pw.TextStyle(
+                                                          fontSize: 10.sp))
+                                                ],
+                                              ),
+                                            ),
+                                            // pw.Text(
+                                            //     '₦ ${formatNumberWithCommas(receipt[0]['invoice'][0]['balanceDue'].toString())}',
+                                            //     style: pw.TextStyle(
+                                            //       fontSize: 8.sp,
+                                            //     )),
                                           ],
                                         ),
                                         pw.Divider(),
@@ -550,11 +641,28 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                                 fontWeight: pw.FontWeight.bold,
                                               ),
                                             ),
-                                            pw.Text(
-                                                '₦ ${formatNumberWithCommas(receipt[0]['paymentRefAmt'].toString())}',
-                                                style: pw.TextStyle(
-                                                  fontSize: 8.sp,
-                                                )),
+                                            pw.RichText(
+                                              text: pw.TextSpan(
+                                                children: [
+                                                  pw.TextSpan(
+                                                    text: '₦',
+                                                    style: pw.TextStyle(
+                                                        font: font,
+                                                        fontSize: 10.sp),
+                                                  ),
+                                                  pw.TextSpan(
+                                                      text:
+                                                          '${formatNumberWithCommas(receipt[0]['paymentRefAmt'].toString())}',
+                                                      style: pw.TextStyle(
+                                                          fontSize: 10.sp))
+                                                ],
+                                              ),
+                                            ),
+                                            // pw.Text(
+                                            //     '₦ ${formatNumberWithCommas(receipt[0]['paymentRefAmt'].toString())}',
+                                            //     style: pw.TextStyle(
+                                            //       fontSize: 8.sp,
+                                            //     )),
                                           ],
                                         ),
                                         pw.Divider(),
@@ -569,11 +677,28 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                                 fontWeight: pw.FontWeight.bold,
                                               ),
                                             ),
-                                            pw.Text(
-                                                '₦ ${formatNumberWithCommas((receipt[0]['invoice'][0]['balanceDue'] - receipt[0]['paymentRefAmt']).toString())}',
-                                                style: pw.TextStyle(
-                                                  fontSize: 8.sp,
-                                                )),
+                                            pw.RichText(
+                                              text: pw.TextSpan(
+                                                children: [
+                                                  pw.TextSpan(
+                                                    text: '₦',
+                                                    style: pw.TextStyle(
+                                                        font: font,
+                                                        fontSize: 10.sp),
+                                                  ),
+                                                  pw.TextSpan(
+                                                      text:
+                                                          '${formatNumberWithCommas((receipt[0]['invoice'][0]['balanceDue'] - receipt[0]['paymentRefAmt']).toString())}',
+                                                      style: pw.TextStyle(
+                                                          fontSize: 10.sp))
+                                                ],
+                                              ),
+                                            ),
+                                            // pw.Text(
+                                            //     '₦ ${formatNumberWithCommas((receipt[0]['invoice'][0]['balanceDue'] - receipt[0]['paymentRefAmt']).toString())}',
+                                            //     style: pw.TextStyle(
+                                            //       fontSize: 8.sp,
+                                            //     )),
                                           ],
                                         ),
                                       ],
@@ -690,12 +815,15 @@ class _ReceiptPageState extends State<ReceiptPage> {
     print(calculateTotalAmount.toString());
 
     return Scaffold(
-      body: PopScope(
-        // canPop: true,
-        onPopInvoked: (didPop) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, SalesRepMainPage.routeName, (route) => false);
-          // true;
+      body: WillPopScope(
+        onWillPop: () async {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SalesRepMainPage(),
+              ),
+              (route) => false);
+          return false;
         },
         child: PdfPreview(
           build: (format) => generatePdf(),

@@ -27,7 +27,7 @@ class SalesStoreController {
       {required BuildContext context,
       required String productName,
       required int price,
-      required String productId,
+      required List productId,
       required int quantity}) {
     return salesProductRepository.addToCart(
       productId: productId,

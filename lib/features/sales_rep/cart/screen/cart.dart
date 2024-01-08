@@ -38,10 +38,10 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     itemList.removeAt(index);
   }
 
-  List<TextEditingController> product =
-      List.generate(itemList.length, (index) => TextEditingController());
-  List<FocusNode> focus =
-      List.generate(itemList.length, (index) => FocusNode());
+  // List<TextEditingController> product =
+  //     List.generate(itemList.length, (index) => TextEditingController());
+  // List<FocusNode> focus =
+  //     List.generate(itemList.length, (index) => FocusNode());
 
   final TextEditingController customrname = TextEditingController();
   final TextEditingController customerLocation = TextEditingController();
@@ -73,14 +73,18 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     required List productId,
   }) async {
     ref.read(cartControllerProvider).uploadCart(
-          productId: productId,
+          // productId: productId,
           officePhoneNo: '',
           hasDeliveryCharge: getFormattedValue(),
           bankTransf: bankTransfer.text.isEmpty ? 'Nil' : bankTransfer.text,
           customerLocation: customerLocation.text,
           customerName: customrname.text,
           customerPhoneNo: customerPhone.text,
-          deliveryCharge: isDeliveryFeesEnabled ? deliveryCharges.text : '0',
+          deliveryCharge: isDeliveryFeesEnabled
+              ? deliveryCharges.text.isEmpty
+                  ? '0'
+                  : deliveryCharges.text
+              : '0',
           context: context,
           orderId: orderId,
           price: price,
@@ -93,13 +97,18 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PopScope(
+      body: WillPopScope(
         // canPop: true,
-        // onPopInvoked: (didPop) {
-        //   Navigator.pop(context);
-        //   Navigator.pushNamedAndRemoveUntil(
-        //       context, SalesRepMainPage.routeName, (route) => false);
-        // },
+        onWillPop: () async {
+          // Navigator.pop(context);
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SalesRepMainPage(),
+              ),
+              (route) => false);
+          return false;
+        },
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(
@@ -382,14 +391,38 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                 return StatefulBuilder(
                                     builder: (context, setState) {
                                   List<TextEditingController> product = [];
+                                  int lastIndex = itemList.length == 0
+                                      ? 1
+                                      : itemList.length - 1;
+                                  List<List<TextEditingController>>
+                                      controllers = [];
+
+                                  for (int i = 0; i < itemList.length; i++) {
+                                    // Assuming 5 items
+                                    if (itemList.length == 1) {
+                                      controllers.add(
+                                        List.generate(
+                                          itemList[0].quantity,
+                                          (index) => TextEditingController(),
+                                        ),
+                                      );
+                                    } else {
+                                      controllers.add(
+                                        List.generate(
+                                          itemList[i].quantity,
+                                          (index) => TextEditingController(),
+                                        ),
+                                      );
+                                    }
+                                  }
+
                                   // List.generate(itemList.length, (index) {
                                   //   List<TextEditingController> control = [];
                                   //   return TextEditingController();
                                   // }, growable: true);
-                                  List<FocusNode> focus = List.generate(
-                                      itemList.length, (index) => FocusNode(),
-                                      growable: true);
-                               
+                                  // List<FocusNode> focus = List.generate(
+                                  //     itemList.length, (index) => FocusNode(),
+                                  //     growable: true);
 
                                   return Dialog(
                                     insetPadding:
@@ -475,12 +508,20 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                   shrinkWrap: true,
                                                   itemBuilder:
                                                       (context, index) {
-                                                    List<TextEditingController>
-                                                        txt = List.generate(
-                                                            itemList.length,
-                                                            (index) =>
-                                                                TextEditingController());
-                                                    product = txt;
+                                                    // List<TextEditingController>
+                                                    //     txt = List.generate(
+                                                    //         itemList[index]
+                                                    //             .quantity,
+                                                    //         (indexN) =>
+                                                    //             TextEditingController());
+                                                    List<FocusNode>
+                                                        innerFocusNodes = List
+                                                            .generate(
+                                                                itemList[index]
+                                                                    .quantity,
+                                                                (indexN) =>
+                                                                    FocusNode());
+                                                    // product = txt;
                                                     List<Widget>
                                                         editItems = List
                                                             .generate(
@@ -505,9 +546,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                                                 fontSize: 7.5.sp,
                                                                               ),
                                                                           focusNode:
-                                                                              focus[index],
+                                                                              innerFocusNodes[NEWindex],
                                                                           controller:
-                                                                              txt[NEWindex],
+                                                                              controllers[index][NEWindex],
                                                                           decoration:
                                                                               InputDecoration(
                                                                             contentPadding:
@@ -596,27 +637,76 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                       const Color(0xFF1422FF),
                                                 ),
                                                 onPressed: () {
-                                                  print('done');
-                                                  // productIdStrings = product
-                                                  //     .map((e) => e.)
-                                                  //     .toList();
+                                                  if (customerLocation
+                                                          .text.isEmpty ||
+                                                      customerPhone
+                                                          .text.isEmpty ||
+                                                      customrname
+                                                          .text.isEmpty) {
+                                                    showSnackBar(context,
+                                                        'All fields must be filled');
+                                                  } else {
+                                                    print('done');
+                                                    if (itemList.length == 1) {
+                                                      List<String>
+                                                          newProductIds =
+                                                          controllers[0]
+                                                              .map(
+                                                                  (controller) =>
+                                                                      controller
+                                                                          .text)
+                                                              .toList();
+                                                      itemList[0].productId =
+                                                          newProductIds;
+                                                      print(newProductIds);
+                                                    } else {
+                                                      for (int i = 0;
+                                                          i <
+                                                              controllers
+                                                                  .length;
+                                                          i++) {
+                                                        List<String>
+                                                            newProductIds =
+                                                            controllers[i]
+                                                                .map((controller) =>
+                                                                    controller
+                                                                        .text)
+                                                                .toList();
+                                                        itemList[i].productId =
+                                                            newProductIds;
+                                                        print(newProductIds);
+                                                      }
+                                                    }
 
-                                                  // int balance = getTotal()
-                                                  //         .toInt() -
-                                                  //     int.parse(
-                                                  //         paymentRefAmount.text);
-                                                  // setState(() {
-                                                  //   netAmount = balance;
-                                                  // });
-                                                  print('next');
-                                                  uploadCart(
-                                                      productId:
-                                                          productIdStrings,
-                                                      orderId: ID,
-                                                      price:
-                                                          getTotal().toInt());
+                                                    print(itemList.length);
+                                                    print(itemList[0]
+                                                        .productName);
+                                                    print(
+                                                        itemList[0].productId);
+                                                    // print(
+                                                    //     itemList[1].productName);
+                                                    // print(itemList[1].productId);
 
-                                                  print(customrname.text);
+                                                    // productIdStrings = product
+                                                    //     .map((e) => e.)
+                                                    //     .toList();
+
+                                                    // int balance = getTotal()
+                                                    //         .toInt() -
+                                                    //     int.parse(
+                                                    //         paymentRefAmount.text);
+                                                    // setState(() {
+                                                    //   netAmount = balance;
+                                                    // });
+                                                    print('next');
+                                                    uploadCart(
+                                                        productId: [],
+                                                        orderId: ID,
+                                                        price:
+                                                            getTotal().toInt());
+
+                                                    print(customrname.text);
+                                                  }
                                                 },
                                                 child: Text(
                                                   'Check out',

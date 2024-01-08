@@ -21,19 +21,11 @@ class _AdminMainPageState extends State<AdminMainPage> {
       seletedIndex = index;
     });
   }
-  final List _pages = [
-    const Home(),
-    const Shop(),
-    const Add(),
-    const ApprovalPage(),
-  ];
 
   @override
   Widget build(BuildContext context) {
-    
-
     return Scaffold(
-      body: _pages[seletedIndex],
+      body: pages[seletedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         iconSize: 33.sp,

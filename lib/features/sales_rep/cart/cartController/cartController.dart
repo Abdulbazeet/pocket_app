@@ -23,13 +23,13 @@ class CartController {
     required String customerPhoneNo,
     required String officePhoneNo,
     required String bankTransf,
-    required List productId,
+    // required List productId,
     required String deliveryCharge,
     required String hasDeliveryCharge,
     required int price,
   }) {
     return cartRepository.uploadCart(
-      productIds: productId,
+      // productIds: productId,
       hasDeliveryCharge: hasDeliveryCharge,
       bankTransf: bankTransf,
       deliveryCharge: deliveryCharge,

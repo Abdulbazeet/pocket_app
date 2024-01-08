@@ -7,7 +7,7 @@ class ProductModel {
   final int id;
   final String product_name;
   final String img_url;
-  final String product_id;
+  final List product_id;
   final double price;
   final String store_name;
   final int? quantity;
@@ -21,6 +21,7 @@ class ProductModel {
     required this.quantity,
   });
 
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
@@ -29,19 +30,21 @@ class ProductModel {
       'product_id': product_id,
       'price': price,
       'store_name': store_name,
+      'quantity': quantity,
     };
   }
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
-      quantity: map['quantity'],
-      id: map['id'] as int,
-      product_name: map['product_name'] as String,
-      img_url: map['img_url'] as String,
-      product_id: map['product_id'] as String,
-      price: map['price'] as double,
-      store_name: map['store_name'] as String,
-    );
+        id: map['id'] as int,
+        product_name: map['product_name'] ,
+        img_url: map['img_url'] ,
+        product_id: List.from(
+          (map['product_id'] ),
+        ),
+        price: map['price'] as double,
+        store_name: map['store_name'] as String,
+        quantity: map['quantity'] != null ? map['quantity'] as int : null);
   }
 
   String toJson() => json.encode(toMap());

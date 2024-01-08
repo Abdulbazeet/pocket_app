@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shopping_app/common/widgets/text_widget.dart';
+import 'package:shopping_app/screens/admin_main_page.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../common/utils.dart';
@@ -40,12 +41,14 @@ class _EditProductState extends ConsumerState<EditProduct> {
         name: nameController.text.isEmpty
             ? widget.data.product_name
             : nameController.text,
-        storeId: widget.data.id.toString(),
+        storeId: storeID.toString(),
         price: priceCotroller.text.isEmpty
             ? widget.data.price.toString()
             : priceCotroller.text,
-        quantity: quanttyController.text,
-        productId: widget.data.product_id.toString(),
+        quantity: quanttyController.text.isEmpty
+            ? widget.data.quantity.toString()
+            : quanttyController.text,
+        productId: widget.data.id.toString(),
         img_url: image);
   }
 
@@ -62,10 +65,12 @@ class _EditProductState extends ConsumerState<EditProduct> {
       body: WillPopScope(
         onWillPop: () async {
           setState(() {
-            Navigator.pop(context, true);
+            // Navigator.pop(context, true);
+            Navigator.pushNamedAndRemoveUntil(
+                context, AdminMainPage.routeName, (route) => false);
             store = false;
           });
-          return true;
+          return false;
         },
         child: SafeArea(
           child: SingleChildScrollView(
@@ -95,11 +100,11 @@ class _EditProductState extends ConsumerState<EditProduct> {
                                 height: 120.sp,
                                 width: 140.sp,
                                 decoration: BoxDecoration(
-                                  // image: DecorationImage(
-                                  //     image: NetworkImage(
-                                  //       widget.data.img_url,
-                                  //     ),
-                                  //     fit: BoxFit.cover),
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                        widget.data.img_url,
+                                      ),
+                                      fit: BoxFit.cover),
                                   color: const Color(0xFF1422FF),
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(

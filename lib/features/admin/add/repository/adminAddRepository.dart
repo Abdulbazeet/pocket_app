@@ -140,7 +140,7 @@ class AdminAddRepository {
     required int storeId,
     required double price,
     required String productName,
-    required String productID,
+    required List productID,
     required String productQuantity,
     required File? productImage,
   }) async {
@@ -195,6 +195,10 @@ class AdminAddRepository {
           do {
             newId = random.nextInt(90000) + 10000;
           } while (data.any((item) => item['product_id'] == newId));
+          List id = [];
+          id.add(newId);
+          // print(newID);
+          print(id);
 
           var headers = {
             'Authorization': 'Token $token',
@@ -210,7 +214,7 @@ class AdminAddRepository {
             "name": productName, // product name,  data_type = string
             "image_url":
                 imageURL, // shop image url, must be an url,  data_type = string
-            "productId": newId, // PRODUCT designated ID,  data_type = string
+            "productId": id, // PRODUCT designated ID,  data_type = string
             "price": price, // product price,  data_type = float/decimal
             "quantity": productQuantity
           });

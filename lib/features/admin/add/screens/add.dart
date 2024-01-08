@@ -96,6 +96,9 @@ class _AddState extends ConsumerState<Add> {
     _locationController.dispose();
   }
 
+  // List<String> _id = [];
+  //     final _id = _id.add(_productIDController.text);
+
   void addProduct() {
     print('add');
     showDialog(
@@ -115,8 +118,11 @@ class _AddState extends ConsumerState<Add> {
         );
       },
     );
+    String _id = _productIDController.text;
+    List<String> _productID = [];
+    _productID.add(_id);
     ref.read(adminAddControllerProvider).addProduct(
-          productID: _productIDController.text,
+          productID: _productID,
           quantity: _quantityController.text,
           context: context,
           ref: ref,
@@ -125,6 +131,7 @@ class _AddState extends ConsumerState<Add> {
           productName: _productNameController.text,
           productImage: image,
         );
+
     Navigator.pop(context);
   }
 
@@ -274,7 +281,19 @@ class _AddState extends ConsumerState<Add> {
                                     ),
                                     backgroundColor: const Color(0xFF1422FF),
                                   ),
-                                  onPressed: addStore,
+                                  onPressed: () {
+                                    if (_nameController.text.isEmpty ||
+                                        _locationController.text.isEmpty ||
+                                        _priceController.text.isEmpty ||
+                                        _storeNumberController.text.isEmpty ||
+                                        _emailController.text.isEmpty ||
+                                        _passwordController.text.isEmpty) {
+                                      showSnackBar(context,
+                                          'All necessary field needs to be filled');
+                                    } else {
+                                      addStore();
+                                    }
+                                  },
                                   child: Text(
                                     'Create Store',
                                     style: Theme.of(context)
@@ -411,7 +430,16 @@ class _AddState extends ConsumerState<Add> {
                               ),
                               backgroundColor: const Color(0xFF1422FF),
                             ),
-                            onPressed: addProduct,
+                            onPressed: () {
+                              if (_productNameController.text.isEmpty ||
+                                  _priceController.text.isEmpty ||
+                                  _quantityController.text.isEmpty) {
+                                showSnackBar(context,
+                                    'All necessary fields needs to be filled ');
+                              } else {
+                                addProduct();
+                              }
+                            },
                             child: Text(
                               'Create Product',
                               style: Theme.of(context)

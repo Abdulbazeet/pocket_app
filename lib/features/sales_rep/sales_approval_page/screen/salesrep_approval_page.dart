@@ -25,6 +25,8 @@ String setDate(var dataDate) {
   return formattedDate;
 }
 
+final format = NumberFormat.simpleCurrency(locale: 'en_NG');
+
 class _SalesRepApprovalState extends ConsumerState<SalesRepApproval> {
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,7 @@ class _SalesRepApprovalState extends ConsumerState<SalesRepApproval> {
                       ),
                       child: Text(
                         'ALL ORDERS',
+                        // format.format(10000),
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: Colors.white,
                               fontSize: 22.sp,

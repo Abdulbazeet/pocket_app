@@ -7,6 +7,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shopping_app/common/widgets/text_widget.dart';
+import 'package:shopping_app/features/admin/add/screens/add.dart';
+import 'package:shopping_app/features/admin/approval_page/screens/approval_page.dart';
+import 'package:shopping_app/features/admin/home/screens/home.dart';
+import 'package:shopping_app/features/admin/shop/screens/shop.dart';
 import 'package:shopping_app/models/product_group.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
@@ -39,6 +43,7 @@ void errorHandling({
       break;
     case 400:
       Navigator.pop(context);
+      print(jsonDecode(response.body));
       showSnackBar(
         context,
         jsonDecode(response.body),
@@ -46,6 +51,8 @@ void errorHandling({
       break;
     case 500:
       Navigator.pop(context);
+            print(jsonDecode(response.body));
+
       showSnackBar(
         context,
         jsonDecode(response.body),
@@ -53,6 +60,8 @@ void errorHandling({
       break;
     default:
       Navigator.pop(context);
+            print(jsonDecode(response.body));
+
       showSnackBar(
         context,
         jsonDecode(response.body),
@@ -140,7 +149,7 @@ bool productEdit = false;
 List<String> newId = [];
 
 String adminstoreName = '';
-String newProductId = '';
+var newProductId = '';
 
 String formatNumberWithCommas(String inputString) {
   double number = double.tryParse(inputString) ?? 0.0;
@@ -170,3 +179,9 @@ List newID = [];
 var productSearchData = null;
 var searchTool;
 List productIdStrings = [];
+final List pages = [
+  const Home(),
+  const Shop(),
+  const Add(),
+  const ApprovalPage(),
+];

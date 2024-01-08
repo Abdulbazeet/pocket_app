@@ -71,8 +71,6 @@ class _ShopState extends ConsumerState<Shop> {
         .deleteProduct(id: newProductId.toString(), context: context);
   }
 
-
-
   File? image;
   void selectImage() async {
     image = await pickImageFromGallery(context);
@@ -305,9 +303,10 @@ class _ShopState extends ConsumerState<Shop> {
                                                           onPressed: () {
                                                             setState(() {
                                                               deleteStore();
-                                                              Navigator.pop(
-                                                                  context);
                                                             });
+                                                            Navigator.pop(
+                                                                context);
+                                                            setState(() {});
                                                           },
                                                           child: Text(
                                                             'Yes',
@@ -327,7 +326,7 @@ class _ShopState extends ConsumerState<Shop> {
                                                     );
                                                   },
                                                 );
-                                                setState(() {});
+                                                // setState(() {});
                                               },
                                               storeName: storename.toString(),
                                               storeAddress:
@@ -337,7 +336,7 @@ class _ShopState extends ConsumerState<Shop> {
                                               text1: 'Name',
                                               text2: 'Store Name',
                                               tapText: () {},
-                                              childWidget:SizedBox.shrink(),
+                                              childWidget: SizedBox.shrink(),
                                               tap: () {
                                                 setState(() {
                                                   storeID = storeid;
@@ -518,9 +517,9 @@ class _ShopState extends ConsumerState<Shop> {
                                       var productName = storedata.product_name;
                                       var price = storedata.price;
                                       var image = storedata.img_url;
-                                      var id = storedata.product_id;
+                                      var id = storedata.id;
                                       // var quantity =  storedata.pr
-                                      var pID = removeEUSubstring(id);
+                                      // var pID = removeEUSubstring(id);
                                       return InkWell(
                                         onLongPress: () {
                                           Navigator.push(context,
@@ -553,9 +552,11 @@ class _ShopState extends ConsumerState<Shop> {
                                               ),
                                             ),
                                             tapText: () {
-                                              setState(() {
-                                                newProductId = id;
-                                              });
+                                              // setState(() {
+                                              //   newProductId = id;
+                                              // });
+                                              newProductId = id.toString();
+
                                               showDialog(
                                                 barrierDismissible: false,
                                                 context: context,
@@ -616,7 +617,7 @@ class _ShopState extends ConsumerState<Shop> {
                                                   );
                                                 },
                                               );
-                                              setState(() {});
+                                              // setState(() {});
                                             },
                                             text1: 'Product',
                                             text2: 'Amount'),

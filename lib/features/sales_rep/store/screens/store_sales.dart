@@ -55,7 +55,7 @@ class _StoreSalesState extends ConsumerState<StoreSales> {
   }
 
   void addToCart(
-      {required String productID,
+      {required List productID,
       required String productName,
       required int nPrice,
       required int quantity}) {
@@ -66,11 +66,7 @@ class _StoreSalesState extends ConsumerState<StoreSales> {
           price: nPrice,
           quantity: quantity,
         );
-    setState(
-      () {
-        number = itemList.length.toString();
-      },
-    );
+    updateBadgeContent();
   }
 
   String number = '';
@@ -106,11 +102,21 @@ class _StoreSalesState extends ConsumerState<StoreSales> {
     } catch (e) {}
   }
 
+  String badgeContent = '';
+  void updateBadgeContent() {
+    setState(() {
+      badgeContent =
+          // ignore: prefer_is_empty
+          (itemList.length == null ? '' : itemList.length.toString())!;
+    });
+  }
+
   @override
   void initState() {
     // itemList.length;
     // TODO: implement initState
     super.initState();
+    updateBadgeContent();
   }
 
   @override
@@ -139,7 +145,7 @@ class _StoreSalesState extends ConsumerState<StoreSales> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       badges.Badge(
-                        badgeContent: itemList != [] ? Text(number) : Text(''),
+                        badgeContent: Text(badgeContent),
                         child: IconButton(
                           onPressed: () async {
                             // Navigator.push(
@@ -246,51 +252,52 @@ class _StoreSalesState extends ConsumerState<StoreSales> {
                   SizedBox(
                     width: 60.w,
                     child: FutureBuilder<List<NewProdutModel>>(
-                      future: ref
-                          .read(salesStorecontrollerProvider)
-                          .getProducts(context, ref),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Text(
-                            '----',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge
-                                ?.copyWith(color: Colors.white),
-                          );
-                        } else if (snapshot.data!.isNotEmpty &&
-                            snapshot.data != null &&
-                            snapshot.hasData) {
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: 1,
-                            itemBuilder: (context, index) => Text(
-                              // snapshot.data!,
-                              snapshot.data![index].product_store,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                        future: ref
+                            .read(salesStorecontrollerProvider)
+                            .getProducts(context, ref),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Text(
+                              '----',
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge
-                                  ?.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 25.sp,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                          );
-                        } else {
-                          return Text(
-                            '_________',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge
-                                ?.copyWith(color: Colors.white),
-                          );
-                        }
-                      },
-                    ),
+                                  ?.copyWith(color: Colors.white),
+                            );
+                          } else {
+                            if (snapshot.data!.isNotEmpty &&
+                                snapshot.data != null &&
+                                snapshot.hasData) {
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: 1,
+                                itemBuilder: (context, index) => Text(
+                                  // snapshot.data!,
+                                  snapshot.data![index].product_store,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 25.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
+                              );
+                            } else {
+                              return Text(
+                                '_________',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(color: Colors.white),
+                              );
+                            }
+                          }
+                        }),
                   ),
 
                   SizedBox(
@@ -345,249 +352,108 @@ class _StoreSalesState extends ConsumerState<StoreSales> {
                               ],
                             ),
                           );
-                        }
-                        // else if (snapshot.connectionState ==
-                        //     ConnectionState.active) {
-                        else if (snapshot.hasData &&
-                            snapshot.data != null &&
-                            snapshot.data!.isNotEmpty) {
-                          return Expanded(
-                              child: GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisSpacing: 20.sp,
-                              mainAxisSpacing: 20.sp,
-                              crossAxisCount: 2,
-                            ),
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (context, index) {
-                              var storedata = snapshot.data![index];
-                              var storeName = storedata.product_store;
+                        } else {
+                          if (snapshot.hasData &&
+                              snapshot.data != null &&
+                              snapshot.data!.isNotEmpty) {
+                            return Expanded(
+                                child: GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisSpacing: 20.sp,
+                                mainAxisSpacing: 20.sp,
+                                crossAxisCount: 2,
+                              ),
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index) {
+                                var storedata = snapshot.data![index];
+                                var storeName = storedata.product_store;
 
-                              newStoreName = storeName;
-                              var productName = storedata.prdouct_name;
-                              var quantity = storedata.product_quantity;
-                              var productID = storedata.product_id;
+                                newStoreName = storeName;
+                                var productName = storedata.prdouct_name;
+                                var quantity = storedata.product_quantity;
+                                var productID = storedata.product_id;
 
-                              var price = storedata.product_price;
-                              var nPrice = price.toInt();
-                              var image = storedata.product_image_url;
-                              print(nPrice);
-                              return Sales_Product_widget(
-                                price:
-                                    '₦${formatNumberWithCommas(price.toString())}',
-                                productImage: image,
-                                productName: productName,
-                                tapAction: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      int quantity = 1;
+                                var price = storedata.product_price;
+                                var nPrice = price.toInt();
+                                var image = storedata.product_image_url;
+                                print(nPrice);
+                                return Sales_Product_widget(
+                                  price:
+                                      '₦${formatNumberWithCommas(price.toString())}',
+                                  productImage: image,
+                                  productName: productName,
+                                  tapAction: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        int quantity = 1;
 
-                                      return StatefulBuilder(
-                                        builder: (context, setState) => Dialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              16.sp,
+                                        return StatefulBuilder(
+                                          builder: (context, setState) =>
+                                              Dialog(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                16.sp,
+                                              ),
                                             ),
-                                          ),
-                                          alignment: Alignment.center,
-                                          child: Container(
-                                            width: 335.sp,
-                                            height: 335.sp,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(
-                                                  16.sp,
+                                            alignment: Alignment.center,
+                                            child: Container(
+                                              width: 335.sp,
+                                              height: 335.sp,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(
+                                                    16.sp,
+                                                  ),
                                                 ),
+                                                color: Colors.white,
                                               ),
-                                              color: Colors.white,
-                                            ),
-                                            child: Padding(
-                                              padding: EdgeInsets.only(
-                                                top: 5.sp,
-                                                bottom: 3.sp,
-                                                right: 4.sp,
-                                                left: 15.sp,
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  SizedBox(height: 10.sp),
-                                                  Center(
-                                                    child: Container(
-                                                      width: 160.sp,
-                                                      height: 120.sp,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                          8.sp,
-                                                        ),
-                                                        image: DecorationImage(
-                                                            image: NetworkImage(
-                                                                image),
-                                                            fit: BoxFit.cover),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10.sp,
-                                                  ),
-                                                  const Spacer(),
-                                                  Expanded(
-                                                    child: Center(
-                                                      child: Text(
-                                                        productName,
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyLarge
-                                                            ?.copyWith(
-                                                              fontSize: 13.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 15.sp),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        'Amount :',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyLarge
-                                                            ?.copyWith(
-                                                              fontSize: 10.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                            ),
-                                                      ),
-                                                      SizedBox(width: 10.sp),
-                                                      Text(
-                                                        '₦${formatNumberWithCommas(price.toString())}',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyLarge
-                                                            ?.copyWith(
-                                                              fontSize: 10.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300,
-                                                            ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 15.sp),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        'Quantity :',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyLarge
-                                                            ?.copyWith(
-                                                              fontSize: 10.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                            ),
-                                                      ),
-                                                      SizedBox(width: 10.sp),
-                                                      Container(
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                  top: 5.sp,
+                                                  bottom: 3.sp,
+                                                  right: 4.sp,
+                                                  left: 15.sp,
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(height: 10.sp),
+                                                    Center(
+                                                      child: Container(
+                                                        width: 160.sp,
+                                                        height: 120.sp,
                                                         decoration:
                                                             BoxDecoration(
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
-                                                            4.sp,
+                                                            8.sp,
                                                           ),
-                                                          border: Border.all(
-                                                            color: const Color(
-                                                              0xffCED1D6,
-                                                            ),
-                                                          ),
+                                                          image: DecorationImage(
+                                                              image:
+                                                                  NetworkImage(
+                                                                      image),
+                                                              fit:
+                                                                  BoxFit.cover),
                                                         ),
-                                                        child: Row(
-                                                          children: [
-                                                            InkWell(
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  if (quantity >=
-                                                                      1) {
-                                                                    quantity =
-                                                                        quantity -
-                                                                            1;
-                                                                    newQuantity =
-                                                                        quantity;
-                                                                  } else {
-                                                                    quantity =
-                                                                        0;
-                                                                    newQuantity =
-                                                                        quantity;
-                                                                  }
-                                                                });
-                                                              },
-                                                              child: Container(
-                                                                margin:
-                                                                    EdgeInsets
-                                                                        .only(
-                                                                  left: 5.sp,
-                                                                  bottom: 3.sp,
-                                                                  top: 3.sp,
-                                                                ),
-                                                                alignment:
-                                                                    Alignment
-                                                                        .topCenter,
-                                                                width: 27.sp,
-                                                                height: 14.sp,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: quantity ==
-                                                                          0
-                                                                      ? const Color
-                                                                          .fromARGB(
-                                                                          247,
-                                                                          185,
-                                                                          222,
-                                                                          255)
-                                                                      : const Color
-                                                                          .fromARGB(
-                                                                          247,
-                                                                          96,
-                                                                          178,
-                                                                          249),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                    4.sp,
-                                                                  ),
-                                                                ),
-                                                                child:
-                                                                    const Center(
-                                                                  child: Icon(
-                                                                      Icons
-                                                                          .remove,
-                                                                      color: Colors
-                                                                          .black),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 5.sp,
-                                                            ),
-                                                            Text(
-                                                              '$quantity',
-                                                              style: Theme.of(
-                                                                      context)
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10.sp,
+                                                    ),
+                                                    const Spacer(),
+                                                    Expanded(
+                                                      child: Center(
+                                                        child: Text(
+                                                          productName,
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style:
+                                                              Theme.of(context)
                                                                   .textTheme
                                                                   .bodyLarge
                                                                   ?.copyWith(
@@ -597,173 +463,332 @@ class _StoreSalesState extends ConsumerState<StoreSales> {
                                                                         FontWeight
                                                                             .w500,
                                                                   ),
-                                                            ),
-                                                            SizedBox(
-                                                                width: 5.sp),
-                                                            InkWell(
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  quantity =
-                                                                      quantity +
-                                                                          1;
-                                                                  newQuantity =
-                                                                      quantity;
-                                                                });
-                                                              },
-                                                              child: Container(
-                                                                margin:
-                                                                    EdgeInsets
-                                                                        .only(
-                                                                  left: 5.sp,
-                                                                  bottom: 3.sp,
-                                                                  top: 3.sp,
-                                                                ),
-                                                                width: 27.sp,
-                                                                height: 14.sp,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: const Color
-                                                                      .fromARGB(
-                                                                      247,
-                                                                      96,
-                                                                      178,
-                                                                      249),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                    4.sp,
-                                                                  ),
-                                                                ),
-                                                                child:
-                                                                    const Center(
-                                                                  child: Icon(
-                                                                    Icons.add,
-                                                                    color: Colors
-                                                                        .black,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
                                                         ),
-                                                        // )
                                                       ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 10.sp),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      ElevatedButton(
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                          backgroundColor:
-                                                              quantity == 0
-                                                                  ? const Color
-                                                                      .fromARGB(
-                                                                      255,
-                                                                      163,
-                                                                      173,
-                                                                      238)
-                                                                  : const Color(
-                                                                      0xFF4960F9,
-                                                                    ),
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                              12.sp,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        onPressed: quantity == 0
-                                                            ? null
-                                                            : () {
-                                                                addToCart(
-                                                                    productID:
-                                                                        productID,
-                                                                    productName:
-                                                                        productName,
-                                                                    nPrice:
-                                                                        nPrice,
-                                                                    quantity:
-                                                                        quantity);
-                                                                // ref
-                                                                //     .read(
-                                                                //         salesStorecontrollerProvider)
-                                                                //     .itemList(
-                                                                //       productId:
-                                                                //           productID,
-                                                                //       context:
-                                                                //           context,
-                                                                //       productName:
-                                                                //           productName,
-                                                                //       price:
-                                                                //           nPrice,
-                                                                //       quantity:
-                                                                //           quantity,
-                                                                //     );
-                                                                // setState(
-                                                                //   () {
-                                                                //     number = itemList
-                                                                //         .length
-                                                                //         .toString();
-                                                                //   },
-                                                                // );
-
-                                                                Navigator.pop(
-                                                                    context);
-                                                                imageList
-                                                                    .add(image);
-                                                              },
-                                                        child: Text(
-                                                          'Add to Cart',
+                                                    ),
+                                                    SizedBox(height: 15.sp),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          'Amount :',
+                                                          textAlign:
+                                                              TextAlign.center,
                                                           style:
                                                               Theme.of(context)
                                                                   .textTheme
                                                                   .bodyLarge
                                                                   ?.copyWith(
                                                                     fontSize:
-                                                                        12.sp,
-                                                                    color: Colors
-                                                                        .white,
+                                                                        10.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
                                                                   ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
+                                                        SizedBox(width: 10.sp),
+                                                        Text(
+                                                          '₦${formatNumberWithCommas(price.toString())}',
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyLarge
+                                                                  ?.copyWith(
+                                                                    fontSize:
+                                                                        10.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w300,
+                                                                  ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 15.sp),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          'Quantity :',
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyLarge
+                                                                  ?.copyWith(
+                                                                    fontSize:
+                                                                        10.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                  ),
+                                                        ),
+                                                        SizedBox(width: 10.sp),
+                                                        Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                              4.sp,
+                                                            ),
+                                                            border: Border.all(
+                                                              color:
+                                                                  const Color(
+                                                                0xffCED1D6,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          child: Row(
+                                                            children: [
+                                                              InkWell(
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    if (quantity >=
+                                                                        1) {
+                                                                      quantity =
+                                                                          quantity -
+                                                                              1;
+                                                                      newQuantity =
+                                                                          quantity;
+                                                                    } else {
+                                                                      quantity =
+                                                                          0;
+                                                                      newQuantity =
+                                                                          quantity;
+                                                                    }
+                                                                  });
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  margin:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                    left: 5.sp,
+                                                                    bottom:
+                                                                        3.sp,
+                                                                    top: 3.sp,
+                                                                  ),
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .topCenter,
+                                                                  width: 27.sp,
+                                                                  height: 14.sp,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: quantity ==
+                                                                            0
+                                                                        ? const Color
+                                                                            .fromARGB(
+                                                                            247,
+                                                                            185,
+                                                                            222,
+                                                                            255)
+                                                                        : const Color
+                                                                            .fromARGB(
+                                                                            247,
+                                                                            96,
+                                                                            178,
+                                                                            249),
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                      4.sp,
+                                                                    ),
+                                                                  ),
+                                                                  child:
+                                                                      const Center(
+                                                                    child: Icon(
+                                                                        Icons
+                                                                            .remove,
+                                                                        color: Colors
+                                                                            .black),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 5.sp,
+                                                              ),
+                                                              Text(
+                                                                '$quantity',
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .bodyLarge
+                                                                    ?.copyWith(
+                                                                      fontSize:
+                                                                          13.sp,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                    ),
+                                                              ),
+                                                              SizedBox(
+                                                                  width: 5.sp),
+                                                              InkWell(
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    quantity =
+                                                                        quantity +
+                                                                            1;
+                                                                    newQuantity =
+                                                                        quantity;
+                                                                  });
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  margin:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                    left: 5.sp,
+                                                                    bottom:
+                                                                        3.sp,
+                                                                    top: 3.sp,
+                                                                  ),
+                                                                  width: 27.sp,
+                                                                  height: 14.sp,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: const Color
+                                                                        .fromARGB(
+                                                                        247,
+                                                                        96,
+                                                                        178,
+                                                                        249),
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                      4.sp,
+                                                                    ),
+                                                                  ),
+                                                                  child:
+                                                                      const Center(
+                                                                    child: Icon(
+                                                                      Icons.add,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          // )
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 10.sp),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                                quantity == 0
+                                                                    ? const Color
+                                                                        .fromARGB(
+                                                                        255,
+                                                                        163,
+                                                                        173,
+                                                                        238)
+                                                                    : const Color(
+                                                                        0xFF4960F9,
+                                                                      ),
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                12.sp,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          onPressed:
+                                                              quantity == 0
+                                                                  ? null
+                                                                  : () {
+                                                                      addToCart(
+                                                                          productID:
+                                                                              productID,
+                                                                          productName:
+                                                                              productName,
+                                                                          nPrice:
+                                                                              nPrice,
+                                                                          quantity:
+                                                                              quantity);
+                                                                      // ref
+                                                                      //     .read(
+                                                                      //         salesStorecontrollerProvider)
+                                                                      //     .itemList(
+                                                                      //       productId:
+                                                                      //           productID,
+                                                                      //       context:
+                                                                      //           context,
+                                                                      //       productName:
+                                                                      //           productName,
+                                                                      //       price:
+                                                                      //           nPrice,
+                                                                      //       quantity:
+                                                                      //           quantity,
+                                                                      //     );
+                                                                      // setState(
+                                                                      //   () {
+                                                                      //     number = itemList
+                                                                      //         .length
+                                                                      //         .toString();
+                                                                      //   },
+                                                                      // );
+
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                      imageList.add(
+                                                                          image);
+                                                                    },
+                                                          child: Text(
+                                                            'Add to Cart',
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyLarge
+                                                                ?.copyWith(
+                                                                  fontSize:
+                                                                      12.sp,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                                quantity: 'QUANTITY: ${quantity.toString()} ',
-                              );
-                            },
-                          ));
-                        } else {
-                          return Center(
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 150.sp,
-                                ),
-                                Text(
-                                  'No Product',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                              ],
-                            ),
-                          );
+                                        );
+                                      },
+                                    );
+                                  },
+                                  quantity: 'QUANTITY: ${quantity.toString()} ',
+                                );
+                              },
+                            ));
+                          } else {
+                            return Center(
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 150.sp,
+                                  ),
+                                  Text(
+                                    'No Product',
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
                         }
                       }
-
                       // },
                       )
                 ],

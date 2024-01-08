@@ -71,7 +71,7 @@ class SalesProductRepository {
       {required BuildContext context,
       required String productName,
       required int amount,
-      required String productId,
+      required List productId,
       required int quantity}) {
     try {
       Item item = Item(

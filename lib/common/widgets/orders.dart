@@ -12,7 +12,8 @@ class Orders extends StatelessWidget {
       {super.key,
       required this.customername,
       required this.orderId,
-      required this.amount, required this.date});
+      required this.amount,
+      required this.date});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class Orders extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: 45.sp,
+          width: 55.sp,
           child: Center(
             child: Text(
               '₦$amount',

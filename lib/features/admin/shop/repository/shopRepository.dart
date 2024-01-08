@@ -277,6 +277,8 @@ class AdminStoreRepository {
           response: response,
           onSuccess: () {
             Navigator.pop(context);
+            print(jsonDecode(response.body));
+
             showSnackBar(context, jsonDecode(response.body)['Response']);
           });
     } catch (e) {
@@ -405,18 +407,21 @@ class AdminStoreRepository {
                 'Authorization': 'Token $token',
               },
               body: ({
-                "store_id": itemNumber.toString(), // shop id,  data_type = int
+                "store_id": storeId.toString(), // shop id,  data_type = int
                 "img_url":
                     imageURL, // shop image url, must be an url,  data_type = string
                 "name": name, // product name,  data_type = string
-                "productId":
-                    productId, // product designated ID,  data_type = string
+                // "productId":
+                //     productId, // product designated ID,  data_type = string
                 "price": price
                     .toString(), // product price,  data_type = float/decimal
-                "id": 1.toString(),
+                "id": productId,
                 "quantity":
                     quantity.toString() // product quantity,  data_type = int
               }));
+
+          print(jsonDecode(response.body));
+
           if (response.statusCode == 200) {
             Navigator.pop(context);
             showSnackBar(context, 'Prooduct Updated Successfully');
@@ -436,10 +441,63 @@ class AdminStoreRepository {
         print(req.statusCode);
       }
     } catch (e) {
-      print(4);
-      Navigator.pop(context);
+      var itemNumber;
+   
+      var token = await getToken();
+      http.Response req = await http.get(
+          Uri.parse('https://smonitor.onrender.com/api/product/all/list/'),
+          headers: <String, String>{
+            'Authorization': 'Token $token',
+          });
 
-      showSnackBar(context, 'Error inprocessing data');
+      var data = jsonDecode(req.body);
+      for (var item in data) {
+        if (item['productId'] == productId) {
+          itemNumber = item['store'];
+        }
+      }
+      if (req.statusCode == 200) {
+        http.Response response = await http.post(
+            Uri.parse('https://smonitor.onrender.com/api/product/update/'),
+            headers: <String, String>{
+              'Authorization': 'Token $token',
+            },
+            body: ({
+              "store_id": storeId.toString(), // shop id,  data_type = int
+              "img_url":
+                  "Nil", // shop image url, must be an url,  data_type = string
+              "name": name, // product name,  data_type = string
+              // "productId":
+              //     productId, // product designated ID,  data_type = string
+              "price":
+                  price.toString(), // product price,  data_type = float/decimal
+              "id": productId,
+              "quantity":
+                  quantity.toString() // product quantity,  data_type = int
+            }));
+        print(storeId);
+        print(productId);
+        print(jsonDecode(response.body));
+        if (response.statusCode == 200) {
+          Navigator.pop(context);
+
+          showSnackBar(context, 'Prooduct Updated Successfully');
+        } else {
+          print(2);
+          Navigator.pop(context);
+          showSnackBar(
+              context,
+              // 'Error in updating product',
+              storeId);
+        }
+      } else {
+        Navigator.pop(context);
+        showSnackBar(context, 'Error');
+      }
+      // print(4);
+      // Navigator.pop(context);
+
+      // showSnackBar(context, 'Error inprocessing data');
 
       // showSnackBar(context, e.toString());
       print(e);

@@ -51,7 +51,7 @@ class AdminAddController {
     required int storeId,
     required double price,
     required String productName,
-    required String productID,
+    required List productID,
     required String quantity,
     required File? productImage,
   }) {
