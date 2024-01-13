@@ -31,23 +31,6 @@ class _SignISalesState extends State<SignISales> {
   }
 
   void signIn() {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: SizedBox(
-            height: 40.sp,
-            width: 40.sp,
-            child: const Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.blueAccent,
-              ),
-            ),
-          ),
-        );
-      },
-    );
     salesAuthService.signIn(
       context,
       _nameController.text,

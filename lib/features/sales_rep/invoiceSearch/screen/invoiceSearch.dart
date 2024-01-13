@@ -19,9 +19,10 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
   @override
   Widget build(BuildContext context) {
     void searchInvoice() {
-      ref
-          .read(invoiceSearchControllerProvider)
-          .searchInvoice(orderId: orderIdController.text);
+      ref.read(invoiceSearchControllerProvider).searchInvoice(
+            orderId: orderIdController.text,
+            controller: orderIdController,
+          );
     }
 
     return Scaffold(
@@ -49,6 +50,12 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                   children: [
                     Expanded(
                       child: TextField(
+                        onEditingComplete: () {
+                          setState(() {});
+                        },
+                        onSubmitted: (value) {
+                          setState(() {});
+                        },
                         controller: orderIdController,
                         style: TextStyle(
                             color: Colors.black,
@@ -74,10 +81,10 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
               ),
             ),
             SizedBox(height: 60.sp),
-            FutureBuilder<List<InvoiceModel>>(
-              future: ref
-                  .read(invoiceSearchControllerProvider)
-                  .searchInvoice(orderId: orderIdController.text),
+            FutureBuilder(
+              future: ref.read(invoiceSearchControllerProvider).searchInvoice(
+                  orderId: orderIdController.text,
+                  controller: orderIdController),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return SizedBox(
@@ -89,11 +96,13 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                       ),
                     ),
                   );
-                } else if (snapshot.hasData && snapshot.data != null ||
+                } else if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData &&
+                    snapshot.data != null &&
                     snapshot.data != []) {
                   return ListView.builder(
                     shrinkWrap: true,
-                    itemCount: snapshot.data?.length,
+                    itemCount: PRODUCTID.length,
                     itemBuilder: (context, index) {
                       return Column(
                         children: [
@@ -106,150 +115,350 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                               ),
                             ),
                             onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return Dialog(
-                                    insetPadding:
-                                        EdgeInsets.symmetric(horizontal: 30.sp),
-                                    child: Container(
-                                      height: 350.sp,
-                                      width: double.infinity,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10.sp),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            height: 20.sp,
-                                          ),
-                                          Center(
-                                            child: Container(
-                                              height: 150.sp,
-                                              width: 150.sp,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        12.sp),
-                                                image: DecorationImage(
-                                                  image: NetworkImage(snapshot
-                                                      .data![index]
-                                                      .productImageURL),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 30.sp,
-                                          ),
-                                          SizedBox(
-                                            width: 200.sp,
-                                            child: Center(
-                                              child: Text(
-                                                snapshot
-                                                    .data![index].productName,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge
-                                                    ?.copyWith(
-                                                      fontSize: 10.sp,
-                                                    ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 20.sp,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                'ProductID:',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge
-                                                    ?.copyWith(
-                                                      fontSize: 10.sp,
-                                                    ),
-                                              ),
-                                              SizedBox(width: 15.sp),
-                                              Text(
-                                                snapshot.data![index].productId,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge
-                                                    ?.copyWith(
-                                                      fontSize: 10.sp,
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 20.sp,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                'Quantity Ordered:',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge
-                                                    ?.copyWith(
-                                                      fontSize: 10.sp,
-                                                    ),
-                                              ),
-                                              SizedBox(width: 15.sp),
-                                              Text(
-                                                snapshot.data![index]
-                                                    .productQuantity
-                                                    .toString(),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge
-                                                    ?.copyWith(
-                                                      fontSize: 10.sp,
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 20.sp,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                'Date:',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge
-                                                    ?.copyWith(
-                                                      fontSize: 10.sp,
-                                                    ),
-                                              ),
-                                              SizedBox(width: 15.sp),
-                                              Text(
-                                                snapshot
-                                                    .data![index].productTime,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge
-                                                    ?.copyWith(
-                                                      fontSize: 10.sp,
-                                                    ),
-                                              ),
-                                            ],
-                                          )
-                                        ],
+                              String extractInvoiceId(String text) {
+                                // Split the string by the colon
+                                List<String> parts = text.split(":");
+
+                                // Check if the format is valid
+                                if (parts.length != 2 ||
+                                    parts[0].trim().toLowerCase() !=
+                                        "invoice id") {
+                                  return '';
+                                }
+
+                                // Extract and remove "TP" prefix
+                                String invoiceId = parts[1].trim();
+                                if (invoiceId.startsWith("TP")) {
+                                  invoiceId = invoiceId.substring(2);
+                                }
+
+                                return invoiceId;
+                              }
+
+                              if (extractInvoiceId(PRODUCTID[index]['Res']) ==
+                                  '') {
+                                return null;
+                              } else {
+                                print(
+                                    extractInvoiceId(PRODUCTID[index]['Res']));
+                                // showFuction(
+                                //     context: context,
+                                //     orderId: extractInvoiceId(
+                                //         PRODUCTID[index]['Res']));
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      insetPadding: EdgeInsets.symmetric(
+                                          horizontal: 30.sp, vertical: 20.sp),
+                                      child: Container(
+                                        height: 450.sp,
+                                        width: double.infinity,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10.sp, vertical: 10.sp),
+                                        child: FutureBuilder(
+                                          future: ref
+                                              .read(
+                                                  invoiceSearchControllerProvider)
+                                              .getData(
+                                                  context: context,
+                                                  orderid: 'TP51143'),
+                                          builder: (context, snapshot) {
+                                            print(snapshot.data);
+                                            print('2');
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            } else {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.done) {
+                                                if (snapshot.data != null &&
+                                                    snapshot.data != [] &&
+                                                    snapshot.hasData) {
+                                                  return ListView.builder(
+                                                    itemBuilder:
+                                                        (context, listIndex) {
+                                                      return Column(children: [
+                                                        SizedBox(
+                                                          height: 20.sp,
+                                                        ),
+                                                        Center(
+                                                          child: Container(
+                                                            height: 150.sp,
+                                                            width: 150.sp,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          12.sp),
+                                                              image:
+                                                                  DecorationImage(
+                                                                image: NetworkImage(
+                                                                    snapshot.data[
+                                                                            listIndex]
+                                                                        [
+                                                                        'productImageURL']),
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 30.sp,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 200.sp,
+                                                          child: Center(
+                                                            child: Text(
+                                                              snapshot.data[
+                                                                      listIndex]
+                                                                  [
+                                                                  'productName'],
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .bodyLarge
+                                                                  ?.copyWith(
+                                                                    fontSize:
+                                                                        10.sp,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 20.sp,
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'ProductID:',
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .bodyLarge
+                                                                  ?.copyWith(
+                                                                    fontSize:
+                                                                        10.sp,
+                                                                  ),
+                                                            ),
+                                                            SizedBox(
+                                                                width: 15.sp),
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [],
+                                                            )
+                                                            // SizedBox(
+                                                            //   height: 80.w,
+                                                            //   child: SizedBox(
+                                                            //     child: ListView.builder(
+                                                            //         shrinkWrap: true,
+                                                            // itemCount: snapshot
+                                                            //     .data![index]
+                                                            //         ['productId']
+                                                            //     .entries
+                                                            //     .length,
+                                                            //         itemBuilder: (context,
+                                                            //             entryIndex) {
+                                                            // final entry = snapshot
+                                                            //     .data![index][
+                                                            //         'productId']
+                                                            //     .entries
+                                                            //     .elementAt(
+                                                            //         entryIndex);
+                                                            // final value =
+                                                            //     entry.value;
+                                                            // final valueString =
+                                                            //     value
+                                                            //         .toString();
+                                                            // print(
+                                                            //   snapshot
+                                                            //       .data![index][
+                                                            //           'productId']
+                                                            //       .entries
+                                                            //       .length,
+                                                            // );
+                                                            //   return Text(
+                                                            //     valueString,
+                                                            //     style: Theme.of(
+                                                            //             context)
+                                                            //         .textTheme
+                                                            //         .bodyLarge
+                                                            //         ?.copyWith(
+                                                            //           fontSize:
+                                                            //               10.sp,
+                                                            //         ),
+                                                            //   );
+                                                            // }),
+                                                            //   ),
+                                                            // ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(
+                                                          height: 20.sp,
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                              'Quantity Ordered:',
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .bodyLarge
+                                                                  ?.copyWith(
+                                                                    fontSize:
+                                                                        10.sp,
+                                                                  ),
+                                                            ),
+                                                            SizedBox(
+                                                                width: 15.sp),
+                                                            Text(
+                                                              snapshot.data[
+                                                                      listIndex]
+                                                                      [
+                                                                      'productQuantity']
+                                                                  .toString(),
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .bodyLarge
+                                                                  ?.copyWith(
+                                                                    fontSize:
+                                                                        10.sp,
+                                                                  ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(
+                                                          height: 20.sp,
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                              'Date:',
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .bodyLarge
+                                                                  ?.copyWith(
+                                                                    fontSize:
+                                                                        10.sp,
+                                                                  ),
+                                                            ),
+                                                            SizedBox(
+                                                                width: 15.sp),
+                                                            Text(
+                                                              snapshot.data[
+                                                                      listIndex]
+                                                                  [
+                                                                  'productTime'],
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .bodyLarge
+                                                                  ?.copyWith(
+                                                                    fontSize:
+                                                                        10.sp,
+                                                                  ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ]);
+                                                    },
+                                                  );
+                                                } else {}
+                                              }
+                                            }
+                                            return SizedBox.shrink();
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              );
+                                    );
+                                  },
+                                );
+                              }
+
+                              // showDialog(
+                              //   context: context,
+                              //   builder: (context) {
+                              //     List<Text> widget = List.generate(
+                              //         snapshot.data![index]['productId'].entries
+                              //             .length, (entryIndex) {
+                              //       final entry = snapshot
+                              //           .data![index]['productId'].entries
+                              //           .elementAt(entryIndex);
+                              //       final value = entry.value;
+                              //       final valueString = value.toString();
+                              //       print(
+                              //         snapshot.data![index]['productId'].entries
+                              //             .length,
+                              //       );
+                              //       return Text(
+                              //         valueString,
+                              //         style: Theme.of(context)
+                              //             .textTheme
+                              //             .bodyLarge
+                              //             ?.copyWith(
+                              //               fontSize: 10.sp,
+                              //             ),
+                              //       );
+                              //     });
+                              //     print('object');
+                              //     return Dialog(
+                              //       insetPadding: EdgeInsets.symmetric(
+                              //           horizontal: 30.sp, vertical: 10.sp),
+                              //       child: Container(
+                              //         height: 350.sp,
+                              //         width: double.infinity,
+                              //         padding: EdgeInsets.symmetric(
+                              //             horizontal: 10.sp),
+                              //         child: SingleChildScrollView(
+                              //           child: Column(
+                              //             mainAxisAlignment:
+                              //                 MainAxisAlignment.start,
+                              //             children: [
+
+                              //                 ],
+                              //               )
+                              //             ],
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     );
+                              //   },
+                              // );
                             },
-                            child: Text(snapshot.data![index].productName),
+                            child: Text(
+                              PRODUCTID[index]['Res'],
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    fontSize: 9.sp,
+                                    color: Colors.white,
+                                  ),
+                            ),
                           ),
                           SizedBox(
                             height: 20.sp,
@@ -258,14 +467,15 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                       );
                     },
                   );
+                } else {
+                  return Text(
+                    'No invoice found',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(fontSize: 10.sp),
+                  );
                 }
-                return Text(
-                  'No invoice found',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(fontSize: 10.sp),
-                );
               },
             )
           ]),

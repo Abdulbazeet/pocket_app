@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:intl/intl.dart';
@@ -51,7 +53,7 @@ void errorHandling({
       break;
     case 500:
       Navigator.pop(context);
-            print(jsonDecode(response.body));
+      print(jsonDecode(response.body));
 
       showSnackBar(
         context,
@@ -60,7 +62,7 @@ void errorHandling({
       break;
     default:
       Navigator.pop(context);
-            print(jsonDecode(response.body));
+      print(jsonDecode(response.body));
 
       showSnackBar(
         context,
@@ -159,13 +161,7 @@ String formatNumberWithCommas(String inputString) {
   return formattedNumber;
 }
 
-String removeEUSubstring(String originalString) {
-  if (originalString.contains('(EU)')) {
-    return originalString.replaceAll('(EU)', '');
-  } else {
-    return originalString;
-  }
-}
+//
 
 bool isDeliveryFeesEnabled = false;
 
@@ -185,3 +181,8 @@ final List pages = [
   const Add(),
   const ApprovalPage(),
 ];
+String rep = '';
+var PRODUCTID = [];
+void showFuction({required BuildContext context, required String orderId}) {
+
+}

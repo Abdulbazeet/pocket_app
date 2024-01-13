@@ -62,6 +62,57 @@ class _ReceiptPageState extends State<ReceiptPage> {
     pdf.addPage(pw.Page(
       pageFormat: PdfPageFormat.a4,
       build: (context) {
+        var row = pw.Row(
+          children: [
+            pw.SizedBox(
+              width: 50.sp,
+              child: pw.Text(
+                'PRICE',
+                style: pw.TextStyle(
+                  fontSize: 8.sp,
+                  fontWeight: pw.FontWeight.bold,
+                  color: PdfColor.fromHex('#ffffff'),
+                ),
+              ),
+            ),
+            pw.SizedBox(
+              width: 50.sp,
+              child: pw.Center(
+                child: pw.Text(
+                  'QTY',
+                  style: pw.TextStyle(
+                    fontSize: 8.sp,
+                    fontWeight: pw.FontWeight.bold,
+                    color: PdfColor.fromHex('#ffffff'),
+                  ),
+                ),
+              ),
+            ),
+            pw.SizedBox(
+              width: 60.sp,
+              child: pw.Center(
+                child: pw.Text(
+                  'ID',
+                  style: pw.TextStyle(
+                    fontSize: 8.sp,
+                    fontWeight: pw.FontWeight.bold,
+                    color: PdfColor.fromHex('#ffffff'),
+                  ),
+                ),
+              ),
+            ),
+            pw.SizedBox(
+                width: 60.sp,
+                child: pw.Text(
+                  'TOTAL',
+                  style: pw.TextStyle(
+                    fontSize: 8.sp,
+                    fontWeight: pw.FontWeight.bold,
+                    color: PdfColor.fromHex('#ffffff'),
+                  ),
+                ))
+          ],
+        );
         return pw.Column(children: [
           pw.Container(
             width: double.infinity,
@@ -110,7 +161,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                             ),
                             pw.Text(
                               // '${receipt[0]['store'][0]['mainPhoneNo']}',
-                              widget.salesRep,
+                              rep,
                               style: pw.TextStyle(
                                 fontSize: 10.sp,
                               ),
@@ -312,44 +363,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                     ),
                                   ),
                                 ),
-                                pw.Row(
-                                  children: [
-                                    pw.SizedBox(
-                                      width: 50.sp,
-                                      child: pw.Text(
-                                        'RATE',
-                                        style: pw.TextStyle(
-                                          fontSize: 8.sp,
-                                          fontWeight: pw.FontWeight.bold,
-                                          color: PdfColor.fromHex('#ffffff'),
-                                        ),
-                                      ),
-                                    ),
-                                    pw.SizedBox(
-                                      width: 50.sp,
-                                      child: pw.Center(
-                                        child: pw.Text(
-                                          'QTY',
-                                          style: pw.TextStyle(
-                                            fontSize: 8.sp,
-                                            fontWeight: pw.FontWeight.bold,
-                                            color: PdfColor.fromHex('#ffffff'),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    pw.SizedBox(
-                                        width: 50.sp,
-                                        child: pw.Text(
-                                          'TOTAL',
-                                          style: pw.TextStyle(
-                                            fontSize: 8.sp,
-                                            fontWeight: pw.FontWeight.bold,
-                                            color: PdfColor.fromHex('#ffffff'),
-                                          ),
-                                        ))
-                                  ],
-                                )
+                                row
                               ],
                             ),
                           ),
@@ -391,7 +405,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                       ),
                                     ),
                                     pw.SizedBox(
-                                      width: 50.sp,
+                                      width: 60.sp,
                                       child: pw.RichText(
                                         text: pw.TextSpan(
                                           children: [
@@ -421,15 +435,36 @@ class _ReceiptPageState extends State<ReceiptPage> {
                               ],
                             ),
                           ),
-                          pw.ListView.builder(
+                          // pw.Divider(),
+                          pw.SizedBox(height: 10.sp),
+                          pw.ListView.separated(
+                              separatorBuilder: (context, index) =>
+                                  pw.Divider(),
                               itemBuilder: (context, index) {
                                 var data = receipt[0]['order'];
                                 List newdata = data;
+                                List<pw.Text> widgets = List.generate(
+                                    receipt[0]['order'][index]['productId']
+                                        .length, (entryIndex) {
+                                  var productID = receipt[0]['order'][index]
+                                      ['productId'][entryIndex];
+                                  print(productID);
+                                  print('done');
+                                  // print(receipt[0]['order'][index]['product_id']
+                                  //     [entryIndex]);
+
+                                  // Access and use productId and other relevant data for each entry
+                                  return pw.Text(
+                                      productID); // Replace with your desired widget
+                                });
+
                                 return pw.Container(
                                   width: double.infinity,
                                   child: pw.Row(
                                     mainAxisAlignment:
                                         pw.MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        pw.CrossAxisAlignment.start,
                                     children: [
                                       pw.Expanded(
                                         child: pw.Text(
@@ -442,19 +477,44 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                         ),
                                       ),
                                       pw.Row(
+                                        crossAxisAlignment:
+                                            pw.CrossAxisAlignment.start,
                                         children: [
                                           pw.SizedBox(
                                             width: 50.sp,
-                                            child: pw.Text(
-                                              receipt[0]['order'][index]
-                                                      ['productPrice']
-                                                  .toString(),
-                                              style: pw.TextStyle(
-                                                fontWeight: pw.FontWeight.bold,
-                                                color:
-                                                    PdfColor.fromHex('#000000'),
+                                            child: pw.RichText(
+                                              text: pw.TextSpan(
+                                                children: [
+                                                  pw.TextSpan(
+                                                    text: '₦',
+                                                    style: pw.TextStyle(
+                                                        font: font,
+                                                        fontSize: 10.sp),
+                                                  ),
+                                                  pw.TextSpan(
+                                                      text:
+                                                          // "${receipt[0]['order'][index]['total'].toString()}",
+                                                          formatNumberWithCommas(
+                                                              receipt[0]['order']
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      'productPrice']
+                                                                  .toString()),
+                                                      style: pw.TextStyle(
+                                                          fontSize: 10.sp))
+                                                ],
                                               ),
                                             ),
+
+                                            // pw.Text(
+
+                                            //   style: pw.TextStyle(
+                                            //     fontWeight: pw.FontWeight.bold,
+                                            //     color:
+                                            //         PdfColor.fromHex('#000000'),
+                                            //   ),
+                                            // ),
                                           ),
                                           pw.SizedBox(
                                             width: 50.sp,
@@ -473,7 +533,18 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                             ),
                                           ),
                                           pw.SizedBox(
-                                            width: 50.sp,
+                                            width: 60.sp,
+                                            child: pw.Center(
+                                              child: pw.Column(
+                                                  crossAxisAlignment: pw
+                                                      .CrossAxisAlignment.start,
+                                                  children: widgets),
+                                            ),
+                                          ),
+                                          // pw.Column(children: widgets),
+
+                                          pw.SizedBox(
+                                            width: 60.sp,
                                             child: pw.RichText(
                                               text: pw.TextSpan(
                                                 children: [
@@ -485,14 +556,15 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                                   ),
                                                   pw.TextSpan(
                                                       text:
-                                                          "${receipt[0]['order'][index]['productPrice'].toString()}",
+                                                          // "${receipt[0]['order'][index]['total'].toString()}",
+                                                          formatNumberWithCommas(
+                                                              "${receipt[0]['order'][index]['total'].toString()}"),
                                                       style: pw.TextStyle(
                                                           fontSize: 10.sp))
                                                 ],
                                               ),
                                             ),
                                             // pw.Text(
-                                            //   "₦${receipt[0]['order'][index]['productPrice'].toString()}",
                                             //   style: pw.TextStyle(
                                             //     fontWeight: pw.FontWeight.bold,
                                             //     color:
@@ -796,7 +868,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                   height: 10.sp,
                   width: double.infinity,
                   color: PdfColor.fromHex('#b6b6f7'),
-                ) //column re ooooooooo
+                )
               ],
             ),
           ),

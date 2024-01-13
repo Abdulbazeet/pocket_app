@@ -283,11 +283,12 @@ class _AddState extends ConsumerState<Add> {
                                   ),
                                   onPressed: () {
                                     if (_nameController.text.isEmpty ||
+                                        _salesRepNameController.text.isEmpty ||
                                         _locationController.text.isEmpty ||
-                                        _priceController.text.isEmpty ||
                                         _storeNumberController.text.isEmpty ||
-                                        _emailController.text.isEmpty ||
-                                        _passwordController.text.isEmpty) {
+                                        _storeNumberController.text.isEmpty ||
+                                        _passwordController.text.isEmpty ||
+                                        _emailController.text.isEmpty) {
                                       showSnackBar(context,
                                           'All necessary field needs to be filled');
                                     } else {

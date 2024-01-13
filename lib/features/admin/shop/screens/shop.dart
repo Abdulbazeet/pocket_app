@@ -304,9 +304,10 @@ class _ShopState extends ConsumerState<Shop> {
                                                             setState(() {
                                                               deleteStore();
                                                             });
+                                                            setState(() {});
+
                                                             Navigator.pop(
                                                                 context);
-                                                            setState(() {});
                                                           },
                                                           child: Text(
                                                             'Yes',

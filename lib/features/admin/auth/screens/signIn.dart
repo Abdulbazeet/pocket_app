@@ -29,23 +29,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   }
 
   void signIn() {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: SizedBox(
-            height: 40.sp,
-            width: 40.sp,
-            child: const Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.blueAccent,
-              ),
-            ),
-          ),
-        );
-      },
-    );
     authservice.signIn(
       context,
       nameController.text,
@@ -183,7 +166,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       SizedBox(
                         height: 15.sp,
                       ),
-            
                       SizedBox(
                         height: 40.sp,
                       ),

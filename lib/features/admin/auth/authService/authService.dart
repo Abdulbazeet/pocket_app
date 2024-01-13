@@ -200,6 +200,8 @@ class AuthService {
       //   },
     } catch (e) {
       // showSnackBar(context, e.toString());
+              Navigator.pop(context);
+
       if (e.toString() ==
           "ClientException with SocketException: Failed host lookup: 'smonitor.onrender.com' (OS Error: No address associated with hostname, errno = 7), uri=https://smonitor.onrender.com/api/login/") {
         showSnackBar(context, 'You are not connected to the internet');

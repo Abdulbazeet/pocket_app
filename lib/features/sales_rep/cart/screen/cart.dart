@@ -45,6 +45,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
   final TextEditingController customrname = TextEditingController();
   final TextEditingController customerLocation = TextEditingController();
+  final TextEditingController salesRep = TextEditingController();
   final TextEditingController customerPhone = TextEditingController();
   final TextEditingController officePhone = TextEditingController();
   final TextEditingController deliveryCharges = TextEditingController();
@@ -163,13 +164,18 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                 children: [
                                   SizedBox(height: 20.sp),
                                   SizedBox(
-                                    width: 102.sp,
-                                    child: Image.network(
-                                      imageList[index],
-                                      height: 102.sp,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                                      width: 102.sp,
+                                      child: Container(
+                                        height: 102.sp,
+                                        // fit: BoxFit.cover,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            image: DecorationImage(
+                                                image: NetworkImage(
+                                              imageList[index],
+                                          
+                                            ))),
+                                      )),
                                   SizedBox(
                                     width: 10.sp,
                                   ),
@@ -473,6 +479,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                               SizedBox(
                                                 height: 15.sp,
                                               ),
+                                              TextWidget(
+                                                controller: salesRep,
+                                                hintText:
+                                                    "Enter Sales Rep name",
+                                              ),
+                                              SizedBox(
+                                                height: 15.sp,
+                                              ),
                                               // TextWidget(
                                               //   controller: officePhone,
                                               //   hintText:
@@ -683,6 +697,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                         .productName);
                                                     print(
                                                         itemList[0].productId);
+                                                    rep = salesRep.text;
                                                     // print(
                                                     //     itemList[1].productName);
                                                     // print(itemList[1].productId);

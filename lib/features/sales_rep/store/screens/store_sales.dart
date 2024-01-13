@@ -35,7 +35,7 @@ class _StoreSalesState extends ConsumerState<StoreSales> {
       http.Response response = await http.get(
           Uri.parse('https://smonitor.onrender.com/api/order/list/'),
           headers: <String, String>{
-            'Authorization': 'Token 93f6b835b62dc71bab5c28c6b666231a230f1d15',
+            'Authorization': 'Token 64df0db05bb71eeb0ddf9b64fd438abd5d3715ba',
           });
 
       if (response.statusCode == 200) {
