@@ -169,12 +169,13 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                         height: 102.sp,
                                         // fit: BoxFit.cover,
                                         decoration: BoxDecoration(
-                                            color: Colors.grey,
-                                            image: DecorationImage(
-                                                image: NetworkImage(
+                                          color: Colors.grey,
+                                          image: DecorationImage(
+                                            image: NetworkImage(
                                               imageList[index],
-                                          
-                                            ))),
+                                            ),
+                                          ),
+                                        ),
                                       )),
                                   SizedBox(
                                     width: 10.sp,
