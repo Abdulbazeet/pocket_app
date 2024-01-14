@@ -33,8 +33,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   }
 
   void removeItem(int index) {
-    // Use setState to update the UI
-    // and trigger a rebuild with the updated list
     itemList.removeAt(index);
   }
 
