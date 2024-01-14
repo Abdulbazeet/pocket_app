@@ -303,11 +303,15 @@ class _ShopState extends ConsumerState<Shop> {
                                                           onPressed: () {
                                                             setState(() {
                                                               deleteStore();
-                                                            });
-                                                            setState(() {});
 
-                                                            Navigator.pop(
-                                                                context);
+                                                              Navigator.pop(
+                                                                  context);
+                                                            });
+                                                            // deleteStore();
+
+                                                            // Navigator.pop(
+                                                            //     context);
+                                                            // setState(() {});
                                                           },
                                                           child: Text(
                                                             'Yes',
@@ -596,10 +600,15 @@ class _ShopState extends ConsumerState<Shop> {
                                                         onPressed: () {
                                                           setState(() {
                                                             deleteProduct();
+
+                                                            Navigator.pop(
+                                                                context);
                                                           });
-                                                          Navigator.pop(
-                                                              context);
-                                                          setState(() {});
+                                                          // deleteProduct();
+
+                                                          // Navigator.pop(
+                                                          //     context);
+                                                          // setState(() {});
                                                         },
                                                         child: Text(
                                                           'Yes',

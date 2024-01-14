@@ -131,7 +131,7 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                 // if (invoiceId.startsWith("TP")) {
                                 //   invoiceId = invoiceId.substring(2);
                                 // }
-
+                                print(invoiceId);
                                 return invoiceId;
                               }
 
@@ -161,8 +161,11 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                               .read(
                                                   invoiceSearchControllerProvider)
                                               .getData(
-                                                  context: context,
-                                                  orderid: 'TP51143'),
+                                                context: context,
+                                                orderid: extractInvoiceId(
+                                                  PRODUCTID[index]['Res'],
+                                                ),
+                                              ),
                                           builder: (context, snapshot) {
                                             print(snapshot.data);
                                             print('2');
@@ -185,17 +188,17 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                                             const Divider(),
                                                     itemBuilder:
                                                         (context, listIndex) {
-                                                      List<Text> widget = List.generate(
-                                                          snapshot
-                                                              .data[index]
+                                                      List<Text> widget =
+                                                          List.generate(
+                                                        snapshot
+                                                            .data[index]
+                                                                ['productId']
+                                                            .length,
+                                                        (newIndex) => Text(
+                                                          snapshot.data[index]
                                                                   ['productId']
-                                                              .length,
-                                                          (newIndex) => Text(
-                                                              snapshot.data[
-                                                                          index]
-                                                                      [
-                                                                      'productId']
-                                                                  [newIndex],  style:
+                                                              [newIndex],
+                                                          style:
                                                               Theme.of(context)
                                                                   .textTheme
                                                                   .bodyLarge
@@ -203,7 +206,8 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                                                     fontSize:
                                                                         9.sp,
                                                                   ),
-                                                        ), );
+                                                        ),
+                                                      );
                                                       return Column(children: [
                                                         Center(
                                                           child: Container(

@@ -36,8 +36,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     itemList.removeAt(index);
   }
 
-
-
   final TextEditingController customrname = TextEditingController();
   final TextEditingController customerLocation = TextEditingController();
   final TextEditingController salesRep = TextEditingController();
@@ -159,19 +157,19 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                 children: [
                                   SizedBox(height: 20.sp),
                                   SizedBox(
-                                      width: 102.sp,
-                                      child: Container(
-                                        height: 102.sp,
-                                        // fit: BoxFit.cover,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey,
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                              imageList[index],
-                                            ),
-                                          ),
-                                        ),
-                                      )),
+                                    width: 102.sp,
+                                    child: Container(
+                                      height: 102.sp,
+                                      // fit: BoxFit.cover,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                      ),
+                                      child: Image.network(
+                                        imageList[index],
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
                                   SizedBox(
                                     width: 10.sp,
                                   ),

@@ -353,7 +353,7 @@ class _StoreSalesState extends ConsumerState<StoreSales> {
                             ),
                           );
                         } else {
-                          if (snapshot.hasData &&
+                          if ( snapshot.connectionState == ConnectionState.done && snapshot.hasData &&
                               snapshot.data != null &&
                               snapshot.data!.isNotEmpty) {
                             return Expanded(
