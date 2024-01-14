@@ -128,9 +128,9 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
 
                                 // Extract and remove "TP" prefix
                                 String invoiceId = parts[1].trim();
-                                if (invoiceId.startsWith("TP")) {
-                                  invoiceId = invoiceId.substring(2);
-                                }
+                                // if (invoiceId.startsWith("TP")) {
+                                //   invoiceId = invoiceId.substring(2);
+                                // }
 
                                 return invoiceId;
                               }
@@ -150,7 +150,7 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                   builder: (context) {
                                     return Dialog(
                                       insetPadding: EdgeInsets.symmetric(
-                                          horizontal: 30.sp, vertical: 20.sp),
+                                          horizontal: 20.sp, vertical: 10.sp),
                                       child: Container(
                                         height: 450.sp,
                                         width: double.infinity,
@@ -177,19 +177,42 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                                 if (snapshot.data != null &&
                                                     snapshot.data != [] &&
                                                     snapshot.hasData) {
-                                                  return ListView.builder(
+                                                  return ListView.separated(
+                                                    itemCount:
+                                                        snapshot.data.length,
+                                                    separatorBuilder:
+                                                        (context, index) =>
+                                                            const Divider(),
                                                     itemBuilder:
                                                         (context, listIndex) {
+                                                      List<Text> widget = List.generate(
+                                                          snapshot
+                                                              .data[index]
+                                                                  ['productId']
+                                                              .length,
+                                                          (newIndex) => Text(
+                                                              snapshot.data[
+                                                                          index]
+                                                                      [
+                                                                      'productId']
+                                                                  [newIndex],  style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyLarge
+                                                                  ?.copyWith(
+                                                                    fontSize:
+                                                                        9.sp,
+                                                                  ),
+                                                        ), );
                                                       return Column(children: [
-                                                        SizedBox(
-                                                          height: 20.sp,
-                                                        ),
                                                         Center(
                                                           child: Container(
                                                             height: 150.sp,
                                                             width: 150.sp,
                                                             decoration:
                                                                 BoxDecoration(
+                                                              color:
+                                                                  Colors.grey,
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .circular(
@@ -208,7 +231,7 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                                           ),
                                                         ),
                                                         SizedBox(
-                                                          height: 30.sp,
+                                                          height: 20.sp,
                                                         ),
                                                         SizedBox(
                                                           width: 200.sp,
@@ -228,13 +251,13 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                                                   .bodyLarge
                                                                   ?.copyWith(
                                                                     fontSize:
-                                                                        10.sp,
+                                                                        9.sp,
                                                                   ),
                                                             ),
                                                           ),
                                                         ),
                                                         SizedBox(
-                                                          height: 20.sp,
+                                                          height: 15.sp,
                                                         ),
                                                         Row(
                                                           mainAxisAlignment:
@@ -252,7 +275,7 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                                                   .bodyLarge
                                                                   ?.copyWith(
                                                                     fontSize:
-                                                                        10.sp,
+                                                                        9.sp,
                                                                   ),
                                                             ),
                                                             SizedBox(
@@ -261,7 +284,7 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
                                                                       .start,
-                                                              children: [],
+                                                              children: widget,
                                                             )
                                                             // SizedBox(
                                                             //   height: 80.w,
@@ -310,7 +333,7 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                                           ],
                                                         ),
                                                         SizedBox(
-                                                          height: 20.sp,
+                                                          height: 15.sp,
                                                         ),
                                                         Row(
                                                           mainAxisAlignment:
@@ -325,7 +348,7 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                                                   .bodyLarge
                                                                   ?.copyWith(
                                                                     fontSize:
-                                                                        10.sp,
+                                                                        9.sp,
                                                                   ),
                                                             ),
                                                             SizedBox(
@@ -342,13 +365,13 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                                                   .bodyLarge
                                                                   ?.copyWith(
                                                                     fontSize:
-                                                                        10.sp,
+                                                                        9.sp,
                                                                   ),
                                                             ),
                                                           ],
                                                         ),
                                                         SizedBox(
-                                                          height: 20.sp,
+                                                          height: 15.sp,
                                                         ),
                                                         Row(
                                                           mainAxisAlignment:
@@ -363,7 +386,7 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                                                   .bodyLarge
                                                                   ?.copyWith(
                                                                     fontSize:
-                                                                        10.sp,
+                                                                        9.sp,
                                                                   ),
                                                             ),
                                                             SizedBox(
@@ -379,7 +402,7 @@ class _InvoiceSearchState extends ConsumerState<InvoiceSearch> {
                                                                   .bodyLarge
                                                                   ?.copyWith(
                                                                     fontSize:
-                                                                        10.sp,
+                                                                        9.sp,
                                                                   ),
                                                             ),
                                                           ],
