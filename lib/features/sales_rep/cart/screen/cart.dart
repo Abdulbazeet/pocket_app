@@ -36,10 +36,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     itemList.removeAt(index);
   }
 
-  // List<TextEditingController> product =
-  //     List.generate(itemList.length, (index) => TextEditingController());
-  // List<FocusNode> focus =
-  //     List.generate(itemList.length, (index) => FocusNode());
+
 
   final TextEditingController customrname = TextEditingController();
   final TextEditingController customerLocation = TextEditingController();
