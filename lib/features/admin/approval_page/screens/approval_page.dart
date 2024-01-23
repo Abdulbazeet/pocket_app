@@ -118,7 +118,7 @@ class _ApprovalPageState extends ConsumerState<ApprovalPage> {
                               ),
                             ),
                             SizedBox(
-                              width: 58.sp,
+                              width: 38.sp,
                               child: Center(
                                 child: Text(
                                   'Order',
@@ -148,7 +148,7 @@ class _ApprovalPageState extends ConsumerState<ApprovalPage> {
                               ),
                             ),
                             SizedBox(
-                              width: 58.sp,
+                              width: 78.sp,
                               child: Center(
                                 child: Text(
                                   'Amount',
@@ -217,7 +217,7 @@ class _ApprovalPageState extends ConsumerState<ApprovalPage> {
                                   oderId: orderId,
                                   oder: data.products.length,
                                   date: date,
-                                  amount: formatNumberWithCommas(amount),
+                                  amount: format.format(double.parse(amount)),
                                   childWidget: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
@@ -423,7 +423,7 @@ class _ApprovalPageState extends ConsumerState<ApprovalPage> {
                                   oderId: orderId,
                                   oder: data.products.length,
                                   date: date,
-                                  amount: formatNumberWithCommas(amount),
+                                  amount: format.format(double.parse(amount)),
                                   childWidget: InkWell(
                                     onTap: () {
                                       setState(() {

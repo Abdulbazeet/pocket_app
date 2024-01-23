@@ -82,6 +82,7 @@ class Sales_Product_widget extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontSize: 7.5.sp,
                       fontWeight: FontWeight.w700,
+                      color: Colors.blue
                     ),
               ),
             ],

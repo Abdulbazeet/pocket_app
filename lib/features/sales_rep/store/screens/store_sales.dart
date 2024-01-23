@@ -353,7 +353,9 @@ class _StoreSalesState extends ConsumerState<StoreSales> {
                             ),
                           );
                         } else {
-                          if ( snapshot.connectionState == ConnectionState.done && snapshot.hasData &&
+                          if (snapshot.connectionState ==
+                                  ConnectionState.done &&
+                              snapshot.hasData &&
                               snapshot.data != null &&
                               snapshot.data!.isNotEmpty) {
                             return Expanded(
@@ -380,7 +382,10 @@ class _StoreSalesState extends ConsumerState<StoreSales> {
                                 print(nPrice);
                                 return Sales_Product_widget(
                                   price:
-                                      '₦${formatNumberWithCommas(price.toString())}',
+                                      // '₦${formatNumberWithCommas(price.toString())}',
+                                      format.format(
+                                    price,
+                                  ),
                                   productImage: image,
                                   productName: productName,
                                   tapAction: () {
@@ -487,7 +492,10 @@ class _StoreSalesState extends ConsumerState<StoreSales> {
                                                         ),
                                                         SizedBox(width: 10.sp),
                                                         Text(
-                                                          '₦${formatNumberWithCommas(price.toString())}',
+                                                          // '₦${formatNumberWithCommas(price.toString())}',
+                                                          format.format(
+                                                            price,
+                                                          ),
                                                           style:
                                                               Theme.of(context)
                                                                   .textTheme

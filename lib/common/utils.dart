@@ -186,3 +186,4 @@ var PRODUCTID = [];
 void showFuction({required BuildContext context, required String orderId}) {
 
 }
+final format = NumberFormat.simpleCurrency(locale: 'en', name: 'GH');

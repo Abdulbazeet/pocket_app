@@ -188,7 +188,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyLarge
-                                                    ?.copyWith(fontSize: 10.sp),
+                                                    ?.copyWith(fontSize: 9.sp),
                                               ),
                                             ),
                                             Text(
@@ -196,7 +196,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyLarge
-                                                  ?.copyWith(fontSize: 10.sp),
+                                                  ?.copyWith(fontSize: 9.sp),
                                             ),
                                           ],
                                         ),
@@ -211,11 +211,12 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        '₦${formatNumberWithCommas(itemList[index].price.toString())}',
+                                        // '₦${formatNumberWithCommas(itemList[index].price.toString())}',
+                                        format.format(itemList[index].price),
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyLarge
-                                            ?.copyWith(fontSize: 10.sp),
+                                            ?.copyWith(fontSize: 8.sp),
                                       ),
                                       InkWell(
                                         onTap: () {
@@ -358,18 +359,19 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                     .textTheme
                                     .bodyLarge
                                     ?.copyWith(
-                                        color: Colors.grey, fontSize: 13.sp),
+                                        color: Colors.grey, fontSize: 10.sp),
                               ),
                               SizedBox(
                                 width: 5.sp,
                               ),
                               Text(
-                                '₦${formatNumberWithCommas(getTotal().toString())}',
+                                // '₦${formatNumberWithCommas(getTotal().toString())}',
+                                format.format(getTotal(),),
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyLarge
                                     ?.copyWith(
-                                        color: Colors.grey, fontSize: 13.sp),
+                                        color: Colors.grey, fontSize: 11.sp),
                               )
                             ],
                           )
@@ -739,10 +741,11 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             );
                           },
                           child: Text(
-                            ' Pay ₦${formatNumberWithCommas(getTotal().toString())}',
+                            ' Pay ${format.format(getTotal())}',
                             style:
                                 Theme.of(context).textTheme.bodyLarge?.copyWith(
                                       color: Colors.white,
+                                      fontSize: 12.sp
                                     ),
                           ))
                     ],

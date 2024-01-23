@@ -543,7 +543,8 @@ class _ShopState extends ConsumerState<Shop> {
                                             tap: () {},
                                             storeName: productName,
                                             storeAddress:
-                                                '₦${formatNumberWithCommas(price.toString())}',
+                                                // '₦${formatNumberWithCommas(price.toString())}',
+                                                format.format((price)),
                                             childWidget: Center(
                                               child: Text(
                                                 'Delete Product',

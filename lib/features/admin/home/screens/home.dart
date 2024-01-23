@@ -280,7 +280,7 @@ class _HomeState extends ConsumerState<Home> {
                                         children: [
                                           SizedBox(width: 5.sp),
                                           SizedBox(
-                                            width: 45.sp,
+                                            width: 35.sp,
                                             child: Center(
                                               child: Text(
                                                 ' Name',
@@ -312,7 +312,7 @@ class _HomeState extends ConsumerState<Home> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 45.sp,
+                                            width: 65.sp,
                                             child: Center(
                                               child: Text(
                                                 'Amount',
@@ -408,9 +408,10 @@ class _HomeState extends ConsumerState<Home> {
                                                           height: 5.sp,
                                                         ),
                                                         Orders(
-                                                          amount:
-                                                              formatNumberWithCommas(
-                                                                  amount),
+                                                          amount: format.format(
+                                                              double.parse(
+                                                            amount,
+                                                          )),
                                                           customername:
                                                               customername,
                                                           orderId: orderId,
@@ -503,7 +504,9 @@ class _HomeState extends ConsumerState<Home> {
                                               String revenue = snapshot.data!;
                                               print(revenue);
                                               return Text(
-                                                '₦${formatNumberWithCommas(revenue)}',
+                                                // '₦${formatNumberWithCommas(revenue)}',
+                                                format.format(
+                                                    double.parse(revenue)),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyLarge
@@ -727,7 +730,9 @@ class _HomeState extends ConsumerState<Home> {
                                               String orderBalance =
                                                   snapshot.data!;
                                               return Text(
-                                                '₦${formatNumberWithCommas(orderBalance)}',
+                                                // '₦${formatNumberWithCommas(orderBalance)}',
+                                                format.format(
+                                                    double.parse(orderBalance)),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyLarge

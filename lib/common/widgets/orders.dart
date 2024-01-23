@@ -22,7 +22,7 @@ class Orders extends StatelessWidget {
       children: [
         SizedBox(width: 5.sp),
         SizedBox(
-          width: 45.sp,
+          width: 35.sp,
           child: Center(
             child: Text(
               customername,
@@ -47,10 +47,10 @@ class Orders extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: 55.sp,
+          width: 65.sp,
           child: Center(
             child: Text(
-              '₦$amount',
+              '$amount',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 7.sp,
                     fontWeight: FontWeight.w400,

@@ -40,7 +40,7 @@ class Approval extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 58.sp,
+              width: 48.sp,
               child: Center(
                 child: Text(
                   oder.toString(),
@@ -64,10 +64,10 @@ class Approval extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 58.sp,
+              width: 78.sp,
               child: Center(
                 child: Text(
-                  '₦${amount.toString()}',
+                  '${amount.toString()}',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontSize: 8.sp,
                         fontWeight: FontWeight.w600,

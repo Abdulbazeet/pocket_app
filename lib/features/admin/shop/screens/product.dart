@@ -169,7 +169,8 @@ class _EditProductState extends ConsumerState<EditProduct> {
                   ),
                   TextWidget(
                       hintText:
-                          '₦${formatNumberWithCommas(widget.data.price.toString())}',
+                          // '₦${formatNumberWithCommas(widget.data.price.toString())}',
+                          format.format(widget.data.price),
                       controller: priceCotroller),
                   SizedBox(
                     height: 10.sp,
