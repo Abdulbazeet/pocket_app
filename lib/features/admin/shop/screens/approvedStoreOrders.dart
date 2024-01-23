@@ -91,7 +91,7 @@ class _ApprovedStoreWidgetState extends ConsumerState<ApprovedStoreWidget> {
                           children: [
                             SizedBox(width: 5.sp),
                             SizedBox(
-                              width: 45.sp,
+                              width: 35.sp,
                               child: Center(
                                 child: Text(
                                   ' Name',
@@ -121,7 +121,7 @@ class _ApprovedStoreWidgetState extends ConsumerState<ApprovedStoreWidget> {
                               ),
                             ),
                             SizedBox(
-                              width: 45.sp,
+                              width: 65.sp,
                               child: Center(
                                 child: Text(
                                   'Amount',
@@ -204,8 +204,8 @@ class _ApprovedStoreWidgetState extends ConsumerState<ApprovedStoreWidget> {
                                           height: 5.sp,
                                         ),
                                         Orders(
-                                          amount:
-                                              formatNumberWithCommas(amount),
+                                          amount: format
+                                              .format(double.parse(amount)),
                                           customername: customername,
                                           orderId: orderId,
                                           date: date,
